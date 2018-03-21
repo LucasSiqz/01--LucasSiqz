@@ -24,11 +24,6 @@ int max(int a, int b) {
 }
 
 Image gray_scale(Image img) {
-    /*for (unsigned int i = 0; i < img.h; ++i) {
-        for (unsigned int j = 0; j < img.w; ++j) {
-            print("%u", img.pixel[i][j][0] + img.pixel[i][j][1] + img.pixel[i][j][2]);
-        }
-    }*/
 
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
@@ -143,7 +138,7 @@ Image sepia_filter(Image img) {
     return img;
 }
 
-Image read_all_pixels (Image img){
+Image read_all_pixels(Image img){
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
             scanf("%hu %hu %hu", &img.pixel[i][j][0],
@@ -153,6 +148,39 @@ Image read_all_pixels (Image img){
         }
     }
 
+    return img;
+}
+
+Image mirror_image(Image img){
+    int horizontal = 0;
+    scanf("%d", &horizontal);
+
+    int width = img.width, height = img.height;
+
+    if (horizontal == 1) width /= 2;
+    else height /= 2;
+
+    for (int i2 = 0; i2 < height; ++i2) {
+        for (int j = 0; j < width; ++j) {
+            int x = i2, y = j;
+
+            if (horizontal == 1) y = img.width - 1 - j;
+            else x = img.height - 1 - i2;
+
+            Pixel aux1;
+            aux1.red = img.pixel[i2][j][0];
+            aux1.green = img.pixel[i2][j][1];
+            aux1.blue = img.pixel[i2][j][2];
+
+            img.pixel[i2][j][0] = img.pixel[x][y][0];
+            img.pixel[i2][j][1] = img.pixel[x][y][1];
+            img.pixel[i2][j][2] = img.pixel[x][y][2];
+
+            img.pixel[x][y][0] = aux1.red;
+            img.pixel[x][y][1] = aux1.green;
+            img.pixel[x][y][2] = aux1.blue;
+        }
+    }
     return img;
 }
 
@@ -168,7 +196,7 @@ int main() {
     scanf("%u %u %d", &img.width, &img.height, &max_color);
 
     img = read_all_pixels(img);
-    
+
     int n_options;
     scanf("%d", &n_options);
 
@@ -177,13 +205,12 @@ int main() {
         scanf("%d", &option);
 
         switch(option) {
-            case 1: { // Escala de Cinza
+            case 1: {
                 img = gray_scale(img);
                 break;
             }
-            case 2: { // Filtro Sepia
+            case 2: {
                 img = sepia_filter(img);
-
                 break;
             }
             case 3: { // Blur
@@ -192,7 +219,7 @@ int main() {
                 blur(img.height, img.pixel, size, img.width);
                 break;
             }
-            case 4: { // Rotacao
+            case 4: { // Rotate image
                 int repetitions = 0;
                 scanf("%d", &repetitions);
                 repetitions %= 4;
@@ -201,43 +228,15 @@ int main() {
                 }
                 break;
             }
-            case 5: { // Espelhamento
-                int horizontal = 0;
-                scanf("%d", &horizontal);
-
-                int width = img.width, height = img.height;
-
-                if (horizontal == 1) width /= 2;
-                else height /= 2;
-
-                for (int i2 = 0; i2 < height; ++i2) {
-                    for (int j = 0; j < width; ++j) {
-                        int x = i2, y = j;
-
-                        if (horizontal == 1) y = img.width - 1 - j;
-                        else x = img.height - 1 - i2;
-
-                        Pixel aux1;
-                        aux1.red = img.pixel[i2][j][0];
-                        aux1.green = img.pixel[i2][j][1];
-                        aux1.blue = img.pixel[i2][j][2];
-
-                        img.pixel[i2][j][0] = img.pixel[x][y][0];
-                        img.pixel[i2][j][1] = img.pixel[x][y][1];
-                        img.pixel[i2][j][2] = img.pixel[x][y][2];
-
-                        img.pixel[x][y][0] = aux1.red;
-                        img.pixel[x][y][1] = aux1.green;
-                        img.pixel[x][y][2] = aux1.blue;
-                    }
-                }
+            case 5: { 
+                img = mirror_image(img);
                 break;
             }
-            case 6: { // Inversao de Cores
+            case 6: {
                 invert_colors(img.pixel, img.width, img.height);
                 break;
             }
-            case 7: { // Cortar Imagem
+            case 7: { // Cut Image
                 int x, y;
                 scanf("%d %d", &x, &y);
                 int width, height;
