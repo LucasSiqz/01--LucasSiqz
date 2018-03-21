@@ -23,15 +23,6 @@ int max(int a, int b) {
     return b;
 }
 
-int pixel_igual(Pixel p1, Pixel p2) {
-    if (p1.red == p2.red &&
-        p1.green == p2.green &&
-        p1.blue == p2.blue)
-        return 1;
-    return 0;
-}
-
-
 Image gray_scale(Image img) {
     /*for (unsigned int i = 0; i < img.h; ++i) {
         for (unsigned int j = 0; j < img.w; ++j) {
