@@ -17,11 +17,11 @@ typedef struct _image {
 } Image;
 
 
-int max(int a, int b) {
-    if (a > b)
-        return a;
-    return b;
-}
+// int max(int a, int b) {
+//     if (a > b)
+//         return a;
+//     return b;
+// }
 
 Image gray_scale(Image img) {
 
@@ -70,11 +70,8 @@ void blur(unsigned int height, unsigned short int pixel[512][512][3], int T, uns
 Image rotate90right(Image img) {
     Image rotated;
 
-    rotated.width = img.height;
-    rotated.height = img.width;
-
-    for (unsigned int i = 0, y = 0; i < rotated.height; ++i, ++y) {
-        for (int j = rotated.width - 1, x = 0; j >= 0; --j, ++x) {
+    for (unsigned int i = 0, y = 0; i < img.height; ++i, ++y) {
+        for (int j = img.width - 1, x = 0; j >= 0; --j, ++x) {
             rotated.pixel[i][j][0] = img.pixel[x][y][0];
             rotated.pixel[i][j][1] = img.pixel[x][y][1];
             rotated.pixel[i][j][2] = img.pixel[x][y][2];
@@ -84,15 +81,17 @@ Image rotate90right(Image img) {
     return rotated;
 }
 
-void invert_colors(unsigned short int pixel[512][512][3],
-                    unsigned int width, unsigned int height) {
-    for (unsigned int i = 0; i < height; ++i) {
-        for (unsigned int j = 0; j < width; ++j) {
-            pixel[i][j][0] = 255 - pixel[i][j][0];
-            pixel[i][j][1] = 255 - pixel[i][j][1];
-            pixel[i][j][2] = 255 - pixel[i][j][2];
+Image invert_colors(Image img){
+    Image inverted_colors;
+
+    for (unsigned int i = 0; i < img.height; ++i) {
+        for (unsigned int j = 0; j < img.width; ++j) {
+            inverted_colors.pixel[i][j][0] = 255 - inverted_colors.pixel[i][j][0];
+            inverted_colors.pixel[i][j][1] = 255 - inverted_colors.pixel[i][j][1];
+            inverted_colors.pixel[i][j][2] = 255 - inverted_colors.pixel[i][j][2];
         }
     }
+    return inverted_colors;
 }
 
 Image cut_image(Image img, int x, int y, int width, int height) {
@@ -228,12 +227,12 @@ int main() {
                 }
                 break;
             }
-            case 5: { 
+            case 5: {
                 img = mirror_image(img);
                 break;
             }
             case 6: {
-                invert_colors(img.pixel, img.width, img.height);
+                img = invert_colors(img);
                 break;
             }
             case 7: { // Cut Image
