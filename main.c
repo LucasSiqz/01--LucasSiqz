@@ -143,6 +143,18 @@ Image sepia_filter(Image img) {
     return img;
 }
 
+Image read_all_pixels (Image img){
+    for (unsigned int i = 0; i < img.height; ++i) {
+        for (unsigned int j = 0; j < img.width; ++j) {
+            scanf("%hu %hu %hu", &img.pixel[i][j][0],
+                                 &img.pixel[i][j][1],
+                                 &img.pixel[i][j][2]);
+
+        }
+    }
+
+    return img;
+}
 
 int main() {
     Image img;
@@ -155,16 +167,8 @@ int main() {
     int max_color;
     scanf("%u %u %d", &img.width, &img.height, &max_color);
 
-    // read all pixels of image
-    for (unsigned int i = 0; i < img.height; ++i) {
-        for (unsigned int j = 0; j < img.width; ++j) {
-            scanf("%hu %hu %hu", &img.pixel[i][j][0],
-                                 &img.pixel[i][j][1],
-                                 &img.pixel[i][j][2]);
-
-        }
-    }
-
+    img = read_all_pixels(img);
+    
     int n_options;
     scanf("%d", &n_options);
 
