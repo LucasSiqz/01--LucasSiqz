@@ -16,6 +16,92 @@ typedef struct _image {
     unsigned int height;
 } Image;
 
+// Prototypes
+
+int max(int a, int b);
+int min(int a, int b);
+Image gray_scale(Image img);
+Image blur(Image img);
+Image rotate90right(Image img);
+Image invert_colors(Image img);
+Image cut_image(Image img);
+Image sepia_filter(Image img);
+Image read_all_pixels(Image img);
+Image mirror_image(Image img);
+void print_pixels(Image img);
+
+
+int main() {
+    Image img;
+
+    // read type of image
+    char image_type[4];
+    scanf("%s", image_type);
+
+    // read width height and color of image
+    int max_color;
+    scanf("%u %u %d", &img.width, &img.height, &max_color);
+
+    img = read_all_pixels(img);
+
+    int n_options;
+    scanf("%d", &n_options);
+
+    for(int i = 0; i < n_options; ++i) {
+        int option;
+        scanf("%d", &option);
+
+        switch(option) {
+            case 1: {
+                img = gray_scale(img);
+                break;
+            }
+            case 2: {
+                img = sepia_filter(img);
+                break;
+            }
+            case 3: {
+                img = blur(img);
+                break;
+            }
+            case 4: { // Rotate image
+                int repetitions = 0;
+                scanf("%d", &repetitions);
+                repetitions %= 4;
+                for (int j = 0; j < repetitions; ++j) {
+                    img = rotate90right(img);
+                }
+                // img = rotate_image(img) --> segmentation error;
+                break;
+            }
+            case 5: {
+                img = mirror_image(img);
+                break;
+            }
+            case 6: {
+                img = invert_colors(img);
+                break;
+            }
+            case 7: {
+                img = cut_image(img);
+                break;
+            }
+        }
+
+    }
+
+    // print type of image
+    printf("P3\n");
+
+    // print width height and color of image
+    printf("%u %u\n255\n", img.width, img.height);
+
+    // print pixels of image
+    print_pixels(img);
+
+    return 0;
+}
+
 int max(int a, int b) {
     if (a > b)
         return a;
@@ -91,7 +177,7 @@ Image rotate90right(Image img) {
     return rotated;
 }
 
-Image invert_colors(Image img){
+Image invert_colors(Image img) {
     Image inverted_colors;
 
     for (unsigned int i = 0; i < img.height; ++i) {
@@ -153,7 +239,7 @@ Image sepia_filter(Image img) {
     return img;
 }
 
-Image read_all_pixels(Image img){
+Image read_all_pixels(Image img) {
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
             scanf("%hu %hu %hu", &img.pixel[i][j][0],
@@ -166,7 +252,7 @@ Image read_all_pixels(Image img){
     return img;
 }
 
-Image mirror_image(Image img){
+Image mirror_image(Image img) {
     int horizontal = 0;
     scanf("%d", &horizontal);
 
@@ -199,7 +285,7 @@ Image mirror_image(Image img){
     return img;
 }
 
-void print_pixels(Image img){
+void print_pixels(Image img) {
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
             printf("%hu %hu %hu ", img.pixel[i][j][0],
@@ -221,74 +307,3 @@ void print_pixels(Image img){
 //     }
 //     return img;
 // }
-
-int main() {
-    Image img;
-
-    // read type of image
-    char image_type[4];
-    scanf("%s", image_type);
-
-    // read width height and color of image
-    int max_color;
-    scanf("%u %u %d", &img.width, &img.height, &max_color);
-
-    img = read_all_pixels(img);
-
-    int n_options;
-    scanf("%d", &n_options);
-
-    for(int i = 0; i < n_options; ++i) {
-        int option;
-        scanf("%d", &option);
-
-        switch(option) {
-            case 1: {
-                img = gray_scale(img);
-                break;
-            }
-            case 2: {
-                img = sepia_filter(img);
-                break;
-            }
-            case 3: {
-                img = blur(img);
-                break;
-            }
-            case 4: { // Rotate image
-                int repetitions = 0;
-                scanf("%d", &repetitions);
-                repetitions %= 4;
-                for (int j = 0; j < repetitions; ++j) {
-                    img = rotate90right(img);
-                }
-                // img = rotate_image(img) --> segmentation error;
-                break;
-            }
-            case 5: {
-                img = mirror_image(img);
-                break;
-            }
-            case 6: {
-                img = invert_colors(img);
-                break;
-            }
-            case 7: {
-                img = cut_image(img);
-                break;
-            }
-        }
-
-    }
-
-    // print type of image
-    printf("P3\n");
-
-    // print width height and color of image
-    printf("%u %u\n255\n", img.width, img.height);
-
-    // print pixels of image
-    print_pixels(img);
-
-    return 0;
-}
