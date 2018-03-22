@@ -17,11 +17,11 @@ typedef struct _image {
 } Image;
 
 
-// int max(int a, int b) {
-//     if (a > b)
-//         return a;
-//     return b;
-// }
+int max(int a, int b) {
+    if (a > b)
+        return a;
+    return b;
+}
 
 Image gray_scale(Image img) {
 
@@ -40,32 +40,41 @@ Image gray_scale(Image img) {
     return img;
 }
 
-void blur(unsigned int height, unsigned short int pixel[512][512][3], int T, unsigned int width) {
-    for (unsigned int i = 0; i < height; ++i) {
-        for (unsigned int j = 0; j < width; ++j) {
+int min(int a, int b) {
+    if (a < b)
+        return a;
+    return b;
+}
+
+Image blur(Image img, int size) {
+    for (unsigned int i = 0; i < img.height; ++i) {
+        for (unsigned int j = 0; j < img.width; ++j) {
             Pixel average = {0, 0, 0};
 
-            int min_height = (height - 1 > i + T/2) ? i + T/2 : height - 1;
-            int min_width = (width - 1 > j + T/2) ? j + T/2 : width - 1;
-            for(int x = (0 > i - T/2 ? 0 : i - T/2); x <= min_height; ++x) {
-                for(int y = (0 > j - T/2 ? 0 : j - T/2); y <= min_width; ++y) {
-                    average.red += pixel[x][y][0];
-                    average.green += pixel[x][y][1];
-                    average.blue += pixel[x][y][2];
+            int min_height = min(img.height - 1, i + size/2);
+            int min_width = min(img.width - 1, j + size/2);
+
+            for(int x = (max(0, i - size/2)); x <= min_height; ++x) {
+                for(int y = max(0, j - size/2); y <= min_width; ++y) {
+                    average.red += img.pixel[x][y][0];
+                    average.green += img.pixel[x][y][1];
+                    average.blue += img.pixel[x][y][2];
                 }
             }
 
-            // printf("%u", media.r)
-            average.red /= T * T;
-            average.green /= T * T;
-            average.blue /= T * T;
+            average.red /= size * size;
+            average.green /= size * size;
+            average.blue /= size * size;
 
-            pixel[i][j][0] = average.red;
-            pixel[i][j][1] = average.green;
-            pixel[i][j][2] = average.blue;
+            img.pixel[i][j][0] = average.red;
+            img.pixel[i][j][1] = average.green;
+            img.pixel[i][j][2] = average.blue;
         }
     }
+
+    return img;
 }
+
 
 Image rotate90right(Image img) {
     Image rotated;
@@ -215,7 +224,8 @@ int main() {
             case 3: { // Blur
                 int size = 0;
                 scanf("%d", &size);
-                blur(img.height, img.pixel, size, img.width);
+                img = blur(img, size);
+                // blur(img.height, img.pixel, size, img.width);
                 break;
             }
             case 4: { // Rotate image
