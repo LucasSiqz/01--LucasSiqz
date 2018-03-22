@@ -104,8 +104,14 @@ Image invert_colors(Image img){
     return inverted_colors;
 }
 
-Image cut_image(Image img, int x, int y, int width, int height) {
+Image cut_image(Image img) {
     Image cutted;
+
+    int x, y;
+    scanf("%d %d", &x, &y);
+
+    int width, height;
+    scanf("%d %d", &width, &height);
 
     cutted.width = width;
     cutted.height = height;
@@ -131,15 +137,15 @@ Image sepia_filter(Image img) {
             pixel[2] = img.pixel[x][j][2];
 
             int p =  pixel[0] * .393 + pixel[1] * .769 + pixel[2] * .189;
-            int min_r = (255 >  p) ? p : 255;
+            int min_r = min(255,  p);
             img.pixel[x][j][0] = min_r;
 
             p =  pixel[0] * .349 + pixel[1] * .686 + pixel[2] * .168;
-            min_r = (255 >  p) ? p : 255;
+            min_r = min(255,  p);
             img.pixel[x][j][1] = min_r;
 
             p =  pixel[0] * .272 + pixel[1] * .534 + pixel[2] * .131;
-            min_r = (255 >  p) ? p : 255;
+            min_r = min(255,  p);
             img.pixel[x][j][2] = min_r;
         }
     }
@@ -204,6 +210,18 @@ void print_pixels(Image img){
     }
 }
 
+// Image rotate_image(Image img){
+//     int repetitions = 0;
+//
+//     scanf("%d", &repetitions);
+//     repetitions %= 4;
+//
+//     for (int j = 0; j < repetitions; ++j) {
+//         img = rotate90right(img);
+//     }
+//     return img;
+// }
+
 int main() {
     Image img;
 
@@ -244,6 +262,7 @@ int main() {
                 for (int j = 0; j < repetitions; ++j) {
                     img = rotate90right(img);
                 }
+                // img = rotate_image(img) --> segmentation error;
                 break;
             }
             case 5: {
@@ -254,13 +273,8 @@ int main() {
                 img = invert_colors(img);
                 break;
             }
-            case 7: { // Cut Image
-                int x, y;
-                scanf("%d %d", &x, &y);
-                int width, height;
-                scanf("%d %d", &width, &height);
-
-                img = cut_image(img, x, y, width, height);
+            case 7: {
+                img = cut_image(img);
                 break;
             }
         }
