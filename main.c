@@ -16,10 +16,15 @@ typedef struct _image {
     unsigned int height;
 } Image;
 
-
 int max(int a, int b) {
     if (a > b)
         return a;
+    return b;
+}
+
+int min(int a, int b) {
+    if (a < b)
+      return a;
     return b;
 }
 
@@ -40,13 +45,10 @@ Image gray_scale(Image img) {
     return img;
 }
 
-int min(int a, int b) {
-    if (a < b)
-        return a;
-    return b;
-}
+Image blur(Image img) {
+    int size = 0;
+    scanf("%d", &size);
 
-Image blur(Image img, int size) {
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
             Pixel average = {0, 0, 0};
@@ -54,7 +56,7 @@ Image blur(Image img, int size) {
             int min_height = min(img.height - 1, i + size/2);
             int min_width = min(img.width - 1, j + size/2);
 
-            for(int x = (max(0, i - size/2)); x <= min_height; ++x) {
+            for(int x = max(0, i - size/2); x <= min_height; ++x) {
                 for(int y = max(0, j - size/2); y <= min_width; ++y) {
                     average.red += img.pixel[x][y][0];
                     average.green += img.pixel[x][y][1];
@@ -74,7 +76,6 @@ Image blur(Image img, int size) {
 
     return img;
 }
-
 
 Image rotate90right(Image img) {
     Image rotated;
@@ -192,6 +193,17 @@ Image mirror_image(Image img){
     return img;
 }
 
+void print_pixels(Image img){
+    for (unsigned int i = 0; i < img.height; ++i) {
+        for (unsigned int j = 0; j < img.width; ++j) {
+            printf("%hu %hu %hu ", img.pixel[i][j][0],
+                                   img.pixel[i][j][1],
+                                   img.pixel[i][j][2]);
+        }
+        printf("\n");
+    }
+}
+
 int main() {
     Image img;
 
@@ -221,11 +233,8 @@ int main() {
                 img = sepia_filter(img);
                 break;
             }
-            case 3: { // Blur
-                int size = 0;
-                scanf("%d", &size);
-                img = blur(img, size);
-                // blur(img.height, img.pixel, size, img.width);
+            case 3: {
+                img = blur(img);
                 break;
             }
             case 4: { // Rotate image
@@ -260,18 +269,12 @@ int main() {
 
     // print type of image
     printf("P3\n");
+
     // print width height and color of image
     printf("%u %u\n255\n", img.width, img.height);
 
     // print pixels of image
-    for (unsigned int i = 0; i < img.height; ++i) {
-        for (unsigned int j = 0; j < img.width; ++j) {
-            printf("%hu %hu %hu ", img.pixel[i][j][0],
-                                   img.pixel[i][j][1],
-                                   img.pixel[i][j][2]);
+    print_pixels(img);
 
-        }
-        printf("\n");
-    }
     return 0;
 }
