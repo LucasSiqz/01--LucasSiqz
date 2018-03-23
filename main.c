@@ -1,3 +1,6 @@
+// Lucas Siqueira Rodrigues 15/0137567
+// Compilando o arquivo com o gcc deu erro na opção de rotacionar a imagem, porem compilando com o g++ funcionou ¯\_(ツ)_/¯
+
 #include <stdio.h>
 
 typedef struct _pixel {
@@ -113,6 +116,7 @@ int min(int num1, int num2) {
     return num2;
 }
 
+// Set new values to colors
 void new_colors_values(Pixel *img, Pixel *value) {
     img->red = value->red;
     img->green = value->green;
