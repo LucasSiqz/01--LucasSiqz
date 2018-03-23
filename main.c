@@ -16,8 +16,8 @@ typedef struct _image {
 
 // Prototypes
 
-int max(int a, int b);
-int min(int a, int b);
+int max(int num1, int num2);
+int min(int num1, int num2);
 Image gray_scale(Image img);
 Image blur(Image img);
 Image rotate90right(Image img);
@@ -27,7 +27,7 @@ Image sepia_filter(Image img);
 Image read_all_pixels(Image img);
 Image mirror_image(Image img);
 void print_pixels(Image img);
-void new_colors_values(Pixel *img, Pixel *valor); 
+void new_colors_values(Pixel *img, Pixel *value);
 int calc_average (Image *img, int i, int j);
 
 int main() {
@@ -101,22 +101,22 @@ int main() {
     return 0;
 }
 
-int max(int a, int b) {
-    if (a > b)
-        return a;
-    return b;
+int max(int num1, int num2) {
+    if (num1 > num2)
+        return num1;
+    return num2;
 }
 
-int min(int a, int b) {
-    if (a < b)
-      return a;
-    return b;
+int min(int num1, int num2) {
+    if (num1 < num2)
+      return num1;
+    return num2;
 }
 
-void new_colors_values(Pixel *img, Pixel *valor) {
-    img->red = valor->red;
-    img->green = valor->green;
-    img->blue = valor->blue;
+void new_colors_values(Pixel *img, Pixel *value) {
+    img->red = value->red;
+    img->green = value->green;
+    img->blue = value->blue;
 }
 
 int calc_average (Image *img, int i, int j){
