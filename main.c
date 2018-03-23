@@ -27,6 +27,8 @@ Image sepia_filter(Image img);
 Image read_all_pixels(Image img);
 Image mirror_image(Image img);
 void print_pixels(Image img);
+void new_colors_values(Pixel *img, Pixel *valor); 
+int calc_average (Image *img, int i, int j);
 
 int main() {
     Image img;
@@ -111,14 +113,24 @@ int min(int a, int b) {
     return b;
 }
 
-Image gray_scale(Image img) {
+void new_colors_values(Pixel *img, Pixel *valor) {
+    img->red = valor->red;
+    img->green = valor->green;
+    img->blue = valor->blue;
+}
 
+int calc_average (Image *img, int i, int j){
+    int average = img->pixel[i][j].red +
+                img->pixel[i][j].green +
+                img->pixel[i][j].blue;
+      average /= 3;
+      return average;
+}
+
+Image gray_scale(Image img) {
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
-            int average = img.pixel[i][j].red +
-                        img.pixel[i][j].green +
-                        img.pixel[i][j].blue;
-            average /= 3;
+            int average = calc_average(&img, i, j);
             img.pixel[i][j].red = average;
             img.pixel[i][j].green = average;
             img.pixel[i][j].blue = average;
@@ -151,9 +163,7 @@ Image blur(Image img) {
             average.green /= size * size;
             average.blue /= size * size;
 
-            img.pixel[i][j].red = average.red;
-            img.pixel[i][j].green = average.green;
-            img.pixel[i][j].blue = average.blue;
+            new_colors_values(&img.pixel[i][j], &average);
         }
     }
 
@@ -165,9 +175,7 @@ Image rotate90right(Image img) {
 
     for (unsigned int i = 0, y = 0; i < img.height; ++i, ++y) {
         for (int j = img.width - 1, x = 0; j >= 0; --j, ++x) {
-            rotated.pixel[i][j].red = img.pixel[x][y].red;
-            rotated.pixel[i][j].green = img.pixel[x][y].green;
-            rotated.pixel[i][j].blue = img.pixel[x][y].blue;
+            new_colors_values(&rotated.pixel[i][j], &img.pixel[x][y]);
         }
     }
 
@@ -201,9 +209,7 @@ Image cut_image(Image img) {
 
     for(int i = 0; i < height; ++i) {
         for(int j = 0; j < width; ++j) {
-            cutted.pixel[i][j].red = img.pixel[i + y][j + x].red;
-            cutted.pixel[i][j].green = img.pixel[i + y][j + x].green;
-            cutted.pixel[i][j].blue = img.pixel[i + y][j + x].blue;
+            new_colors_values(&cutted.pixel[i][j], &img.pixel[i + y][j + x]);
         }
     }
 
@@ -266,17 +272,10 @@ Image mirror_image(Image img) {
             else x = img.height - 1 - i2;
 
             Pixel aux1;
-            aux1.red = img.pixel[i2][j].red;
-            aux1.green = img.pixel[i2][j].green;
-            aux1.blue = img.pixel[i2][j].blue;
 
-            img.pixel[i2][j].red = img.pixel[x][y].red;
-            img.pixel[i2][j].green = img.pixel[x][y].green;
-            img.pixel[i2][j].blue = img.pixel[x][y].blue;
-
-            img.pixel[x][y].red = aux1.red;
-            img.pixel[x][y].green = aux1.green;
-            img.pixel[x][y].blue = aux1.blue;
+            new_colors_values(&aux1, &img.pixel[i2][j]);
+            new_colors_values(&img.pixel[i2][j], &img.pixel[x][y]);
+            new_colors_values(&img.pixel[x][y], &aux1);
         }
     }
     return img;
@@ -303,4 +302,5 @@ void print_pixels(Image img) {
 //         img = rotate90right(img);
 //     }
 //     return img;
+
 // }
