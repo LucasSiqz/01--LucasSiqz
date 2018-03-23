@@ -32,6 +32,7 @@ Image mirror_image(Image img);
 void print_pixels(Image img);
 void new_colors_values(Pixel *img, Pixel *value);
 int calc_average (Image *img, int i, int j);
+void calc_inverted_colors(Pixel *img);
 
 int main() {
     Image img;
@@ -186,16 +187,21 @@ Image rotate90right(Image img) {
     return rotated;
 }
 
+void calc_inverted_colors(Pixel *img) {
+    img->red = 255 - img->red;
+    img->green = 255 - img->green;
+    img->blue = 255 - img->blue;
+}
+
 Image invert_colors(Image img) {
     Image inverted_colors;
 
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
-            inverted_colors.pixel[i][j].red = 255 - inverted_colors.pixel[i][j].red;
-            inverted_colors.pixel[i][j].green = 255 - inverted_colors.pixel[i][j].green;
-            inverted_colors.pixel[i][j].blue = 255 - inverted_colors.pixel[i][j].blue;
+            calc_inverted_colors(&inverted_colors.pixel[i][j]);
         }
     }
+    
     return inverted_colors;
 }
 
